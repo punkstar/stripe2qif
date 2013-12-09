@@ -1,24 +1,22 @@
-#!/usr/bin/ruby
 #!/usr/bin/env ruby
 
 require 'optparse'
+require 'date'
 
 module Meanbee
-  require 'csv'
-  require 'pp'
-  require 'bigdecimal'
   require 'stripe'
   
   class StripeQif
-    def initialize(api_key, from_date)
+    def initialize(api_key, from_date, count)
       @qif = Qif.new
-      @from_timestamp = 0
+      @from_timestamp = DateTime.parse(from_date).strftime('%s')
+      @count = count
 
       Stripe.api_key = api_key
     end
 
     def process
-      transfers = Stripe::Transfer.all(:count => 100, :date => { :gt => @from_timestamp })
+      transfers = Stripe::Transfer.all(:count => @count, :date => { :gt => @from_timestamp })
 
       transfers.each do |transfer|
         date = Time.at(transfer.date).to_datetime.strftime("%F")
@@ -71,11 +69,22 @@ end
 
 options = {}
 
+options[:from] = '01/01/1900'
+options[:count] = 100
+
 optparse = OptionParser.new do |opts|
     opts.banner = "Usage: stripe2qif.rb --api-key STRIPE_API_KEY"
 
     opts.on('--api-key STRIPE_API_KEY', 'Stripe API key, required.') do |f|
         options[:api_key] = f
+    end
+
+    opts.on('--from dd/mm/yyyy', 'A date to list all transfers after, exclusive. If not specified, start of time is used.') do |f|
+        options[:from] = f
+    end
+
+    opts.on('--count COUNT', 'The maximum number of transfers to return.  Maximum is 100, will assume 100 if not provided.') do |f|
+        options[:count] = f
     end
 
     opts.on('-h', '--help', 'Display this screen') do |f| 
@@ -94,7 +103,7 @@ rescue
     exit 1
 end
 
-qif = Meanbee::StripeQif.new(options[:api_key], 0)
+qif = Meanbee::StripeQif.new(options[:api_key], options[:from], options[:count])
 qif.process
 
 puts qif.print
