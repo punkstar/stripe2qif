@@ -1,22 +1,35 @@
 GEM
-  remote: https://code.stripe.com/
   remote: https://rubygems.org/
+  remote: https://code.stripe.com/
   specs:
-    active_support (3.0.0)
-      activesupport (= 3.0.0)
-    activesupport (3.0.0)
-    mime-types (1.25.1)
-    multi_json (1.8.2)
-    rest-client (1.6.7)
-      mime-types (>= 1.16)
-    stripe (1.9.9)
-      mime-types (~> 1.25)
-      multi_json (>= 1.0.4, < 2)
+    activesupport (4.2.0)
+      i18n (~> 0.7)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
+      tzinfo (~> 1.1)
+    i18n (0.7.0)
+    json (1.8.2)
+    mime-types (2.4.3)
+    minitest (5.5.1)
+    netrc (0.10.2)
+    rest-client (1.7.2)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
+    stripe (1.18.0)
+      json (~> 1.8.1)
+      mime-types (>= 1.25, < 3.0)
       rest-client (~> 1.4)
+    thread_safe (0.3.4)
+    tzinfo (1.2.2)
+      thread_safe (~> 0.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  active_support
-  stripe
+  activesupport
+  stripe!
+
+BUNDLED WITH
+   1.10.3
