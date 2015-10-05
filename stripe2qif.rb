@@ -13,6 +13,7 @@ module Meanbee
       @count = count
 
       Stripe.api_key = api_key
+      Stripe.api_version = "2013-08-13"
     end
 
     def process
